@@ -1,1 +1,1 @@
-console.log({{loggeableProp}});
+console.log('{{loggeableProp}}');
