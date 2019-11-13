@@ -1,2 +1,2 @@
 templates:
-  - basic.js
+  - .circleci/config.yaml
