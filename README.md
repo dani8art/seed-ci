@@ -1,1 +1,1 @@
-# seed-ci
+# Seed CircleCI
