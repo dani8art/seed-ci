@@ -11,7 +11,7 @@ cache:
 
 build:
   image: circleci/node:12
-  dependecies: npm i
+  install: npm i
   # command: npm build
 
 test:

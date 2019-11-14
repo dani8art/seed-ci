@@ -34,7 +34,7 @@ jobs:
             - *js_deps_cache_key
       - run:
           name: Install dependencies.
-          command: {{build.dependencies}}
+          command: {{build.install}}
       {{#if build.command}}
       - run:
           name: Build command
