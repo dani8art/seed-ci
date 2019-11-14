@@ -8,13 +8,6 @@ master_only: &master_only
     branches:
       only: master
 
-cache: &cache
-  paths:
-    {{#each cache}}
-    - {{this}}
-    {{/each}}
-  key: *js_deps_cache_key
-
 commands:
   git_authoring:
     description: Authoring git commit.
@@ -41,7 +34,11 @@ jobs:
           command: {{build.command}}
       {{/if}}
       - save_cache:
-          <<: *cache
+          paths:
+            {{#each cache}}
+            - {{this}}
+            {{/each}}
+          key: *js_deps_cache_key
 
   test:
     docker:
