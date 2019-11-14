@@ -1,7 +1,7 @@
 version: 2.1
 
 references:
-  js_deps_cache_key: &js_deps_cache_key v1-dependency-{{ checksum "package-lock.json" }}
+  js_deps_cache_key: &js_deps_cache_key v1-dependency-\{{ checksum "package-lock.json" }}
 
 master_only: &master_only
   filters:
