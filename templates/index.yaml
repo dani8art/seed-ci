@@ -1,3 +1,0 @@
-templates:
-  - .release-it.json
-  - .circleci/config.yml
