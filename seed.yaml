@@ -1,0 +1,73 @@
+command_schema: &command_schema
+  schema:
+      type: object
+      properties:
+        image:
+          type: string
+        command:
+          type: string
+      required:
+        - image
+        - command
+
+templates:
+  - .release-it.json
+  - .circleci/config.yml
+  
+scripts:
+  beforePlant: echo "execute before plant circleci seed"
+  afterPlant: npm i @commitlint/cli@^8.2.0 @commitlint/config-conventional@^8.2.0 @release-it/conventional-changelog@^1.1.0
+
+values:
+  artifact:
+    schema:
+      type: string
+    default: circleci
+
+  git:
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+      required:
+        - name
+        - email
+    default:
+      name: Totem Bot
+      email: totem-bot@darteaga.com 
+
+  cache:
+    schema:
+      type: array
+      items:
+        type: string
+    default:
+      - node_modules
+
+  build:
+    <<: *command_schema
+    default:
+      image: circleci/node:12
+      install: npm i
+      # command: npm build
+
+  test:
+    <<: *command_schema
+    default:
+      image: circleci/node:12
+      command: npm test
+
+  release:
+    <<: *command_schema
+    default:
+      image: circleci/node:12
+      command: npm run release
+
+  deploy:
+    <<: *command_schema
+    default:
+      image: circleci/node:12
+      command: npm publish 
