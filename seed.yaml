@@ -1,22 +1,22 @@
 command_schema: &command_schema
   schema:
-      type: object
-      properties:
-        image:
-          type: string
-        command:
-          type: string
-      required:
-        - image
-        - command
+    type: object
+    properties:
+      image:
+        type: string
+      command:
+        type: string
+    required:
+      - image
+      - command
 
 templates:
   - .release-it.json
   - .circleci/config.yml
-  
+
 scripts:
   beforePlant: echo "execute before plant circleci seed"
-  afterPlant: npm i @commitlint/cli@^8.2.0 @commitlint/config-conventional@^8.2.0 @release-it/conventional-changelog@^1.1.0
+  afterPlant: npm i --save-dev @commitlint/cli@^8.2.0 @commitlint/config-conventional@^8.2.0 @release-it/conventional-changelog@^1.1.0
 
 values:
   artifact:
@@ -37,7 +37,7 @@ values:
         - email
     default:
       name: Totem Bot
-      email: totem-bot@darteaga.com 
+      email: totem-bot@darteaga.com
 
   cache:
     schema:
@@ -70,4 +70,4 @@ values:
     <<: *command_schema
     default:
       image: circleci/node:12
-      command: npm publish 
+      command: npm publish
