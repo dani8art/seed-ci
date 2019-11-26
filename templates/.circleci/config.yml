@@ -13,8 +13,8 @@ commands:
     description: Authoring git commit.
     steps:
       - run: git config --global push.default matching
-      - run: git config --global user.email "{{git.user.email}}"
-      - run: git config --global user.name "{{git.user.name}}"
+      - run: git config --global user.email "{{git.email}}"
+      - run: git config --global user.name "{{git.name}}"
 
 jobs:
   build:

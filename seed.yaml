@@ -61,7 +61,7 @@ values:
         enable:
           type: boolean
     default:
-      enable: true
+      enable: false
 
   deployment:
     schema:
