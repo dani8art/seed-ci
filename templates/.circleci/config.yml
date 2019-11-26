@@ -66,7 +66,7 @@ jobs:
     steps:
       - checkout
       - run: git pull  # get all the changes before release step changes.
-      {{#if deployment.package_type "===" "docker"}}
+    {{#if deployment.packageType "===" "docker"}}
       - setup_remote_docker
       - restore_cache:
           keys:
@@ -82,12 +82,12 @@ jobs:
       {{#each deployment.docker.additionalTags}}
       - run: docker push {{deployment.docker.image}}:{{this}}
       {{/each}}
-      {{else}}
+    {{else}}
       - run:
           name: Authenticate against npm registry.
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
       - run: npm publish
-      {{/if}}
+    {{/if}}
 
   {{/if}}
 

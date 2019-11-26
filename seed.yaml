@@ -83,7 +83,7 @@ values:
     default:
       enable: true
       # you coul use diferent types of deployments [npm, docker]
-      package_type: docker
+      packageType: docker
       # if you choose docker
       docker:
         image: darteaga/pets
