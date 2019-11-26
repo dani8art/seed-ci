@@ -66,7 +66,7 @@ jobs:
     steps:
       - checkout
       - run: git pull  # get all the changes before release step changes.
-      {{#if deployment.package_type == "docker"}}
+      {{#if deployment.package_type "===" "docker"}}
       - setup_remote_docker
       - restore_cache:
           keys:
