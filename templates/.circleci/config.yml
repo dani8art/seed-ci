@@ -80,7 +80,7 @@ jobs:
       - run: docker build -t {{deployment.docker.image}}:$MAIN_TAG .
       - run: docker push {{deployment.docker.image}}:$MAIN_TAG
       {{#each deployment.docker.additionalTags}}
-      - run: docker push {{deployment.docker.image}}:{{this}}
+      - run: docker push {{../image}}:{{this}}
       {{/each}}
     {{else}}
       - run:
@@ -109,5 +109,9 @@ workflows:
       - deploy:
           <<: *master_only
           requires:
+          {{#if release.enable}}
             - release
+          {{else}}
+            - test
+          {{/if}}
       {{/if}}

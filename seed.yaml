@@ -47,7 +47,8 @@ values:
   build:
     <<: *command_schema
     default:
-      cmd: npm build
+      noop: noop
+      # cmd: npm build
 
   test:
     <<: *command_schema
