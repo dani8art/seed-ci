@@ -2,13 +2,10 @@ command_schema: &command_schema
   schema:
     type: object
     properties:
-      image:
-        type: string
-      command:
+      cmd:
         type: string
     required:
-      - image
-      - command
+      - cmd
 
 templates:
   - .release-it.json
@@ -50,24 +47,47 @@ values:
   build:
     <<: *command_schema
     default:
-      image: circleci/node:12
-      install: npm i
-      # command: npm build
+      cmd: npm build
 
   test:
     <<: *command_schema
     default:
-      image: circleci/node:12
-      command: npm test
+      cmd: npm test
 
   release:
-    <<: *command_schema
+    schema:
+      type: object
+      properties:
+        enable:
+          type: boolean
     default:
-      image: circleci/node:12
-      command: npm run release
+      enable: true
 
-  deploy:
-    <<: *command_schema
+  deployment:
+    schema:
+      type: object
+      properties:
+        enable:
+          type: boolean
+        package_type:
+          type: string
+        docker:
+          type: object
+          properties:
+            image:
+              type: string
+            additionalTags:
+              type: array
+              items:
+                type: string
     default:
-      image: circleci/node:12
-      command: npm publish
+      enable: true
+      # you coul use diferent types of deployments [npm, docker]
+      package_type: docker
+      # if you choose docker
+      docker:
+        image: darteaga/pets
+        additionalTags:
+          - latest
+      # if you choose npm
+      npm: {}
