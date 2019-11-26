@@ -54,6 +54,8 @@ values:
     <<: *command_schema
     default:
       cmd: npm test
+      dependencies:
+        - bitnami/mongodb:4.2-debian-9
 
   release:
     schema:

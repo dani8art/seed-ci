@@ -39,6 +39,11 @@ jobs:
   test:
     docker:
       - image: circleci/node:12
+    {{#each test.dependencies}}
+      - image: {{this}}
+    {{/each}}
+    environment:
+      NODE_ENV: ci
     steps:
       - checkout
       - restore_cache:
