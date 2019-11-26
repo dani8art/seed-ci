@@ -51,7 +51,17 @@ values:
       # cmd: npm build
 
   test:
-    <<: *command_schema
+    schema:
+      type: object
+      properties:
+        cmd:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+      required:
+        - cmd
     default:
       cmd: npm test
       dependencies:
