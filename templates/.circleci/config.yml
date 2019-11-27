@@ -2,6 +2,7 @@ version: 2.1
 
 references:
   js_deps_cache_key: &js_deps_cache_key v1-dependency-\{{ checksum "package-lock.json" }}
+  js_deps_backup_key: &js_deps_backup_key v1-dependency-
 
 master_only: &master_only
   filters:
@@ -25,6 +26,7 @@ jobs:
       - restore_cache:
           keys:
             - *js_deps_cache_key
+            - *js_deps_backup_key
       - run: npm ci
       {{#if build.cmd}}
       - run: {{build.cmd}}
@@ -49,6 +51,7 @@ jobs:
       - restore_cache:
           keys:
             - *js_deps_cache_key
+            - *js_deps_backup_key
       - run: {{test.cmd}}
 
   {{#if release.enable}}
@@ -61,6 +64,7 @@ jobs:
       - restore_cache:
           keys:
             - *js_deps_cache_key
+            - *js_deps_backup_key
       - run: npm run release
   {{/if}}
 
@@ -76,6 +80,7 @@ jobs:
       - restore_cache:
           keys:
             - *js_deps_cache_key
+            - *js_deps_backup_key
       {{#if release.enable}}
       - run: echo 'export MAIN_TAG="$(npm run --silent get:version)"' >> $BASH_ENV
       {{else}}
