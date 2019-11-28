@@ -129,7 +129,7 @@ jobs:
       {{#each deployment.s3.files}}
       - aws-s3/copy:
           from: {{this}}
-          to: "s3://stable-seeds/{{@root.artifact}}"
+          to: "s3://stable-seeds/{{@root.artifact}}/{{this}}"
           overwrite: true
           arguments: |
             --acl public-read

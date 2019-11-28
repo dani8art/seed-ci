@@ -78,7 +78,7 @@ jobs:
           overwrite: true
       - aws-s3/copy:
           from: seed.yaml
-          to: "s3://stable-seeds/circleci"
+          to: "s3://stable-seeds/circleci/seed.yaml"
           arguments: |
             --acl public-read
 
