@@ -43,9 +43,11 @@ jobs:
   test:
     docker:
       - image: circleci/node:12
-    {{#each test.dependencies}}
+    {{with test}}
+    {{#each dependencies}}
       - image: {{this}}
     {{/each}}
+    {{/with}}
     environment:
       NODE_ENV: ci
     steps:
@@ -57,6 +59,8 @@ jobs:
       {{with test}}
       {{if cmd}}
       - run: {{cmd}}
+      {{else}}
+      - run: npm test
       {{/if}}
       {{else}}
       - run: npm test
