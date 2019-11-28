@@ -1,0 +1,25 @@
+{
+  "name": "seed-circleci",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo testing",
+    "release": "release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dani8art/seed-circleci.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dani8art/seed-circleci/issues"
+  },
+  "homepage": "https://github.com/dani8art/seed-circleci#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@release-it/conventional-changelog": "^1.1.0"
+  }
+}

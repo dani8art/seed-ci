@@ -15,22 +15,22 @@ values:
   cache:
     - node_modules
 
-# By default the buil job executes `npm ci` if build.cmd is configured then it is also executed.
-#   build:
-#     cmd: npm build
+  # By default the buil job executes `npm ci` if build.cmd is configured then it is also executed.
+  #   build:
+  #     cmd: npm build
 
-# By default the test job executes `npm test`
-#   test:
-#     cmd: npm test:ci
-#     dependencies:
-#       - bitnami/mongodb:4.2-debian-9
+  # By default the test job executes `npm test`
+  #   test:
+  #     cmd: npm test:ci
+  #     dependencies:
+  #       - bitnami/mongodb:4.2-debian-9
 
   release:
     enable: false
 
   deployment:
     enable: false
-    # you could use different types of deployment depend on the package type [npm, docker]
+    # you could use different types of deployment depend on the package type [npm, docker, s3]
     packageType: docker
     docker: # if you choose docker
       image: darteaga/pets
@@ -38,3 +38,8 @@ values:
         - latest
 #     npm: # if you choose npm
 #       tokenVar: MY_TOKEN # by default it is NPM_TOKEN
+#     s3: # if you choose s3
+#       bucket: dist/1.0.1
+#       files:
+#         - seed.yaml
+

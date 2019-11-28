@@ -1,0 +1,100 @@
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@1.0.11
+
+references:
+  js_deps_cache_key: &js_deps_cache_key v1-dependency-{{ checksum "package-lock.json" }}
+  js_deps_backup_key: &js_deps_backup_key v1-dependency-
+
+master_only: &master_only
+  filters:
+    branches:
+      only: master
+
+commands:
+  git_authoring:
+    description: Authoring git commit.
+    steps:
+      - run: git config --global push.default matching
+      - run: git config --global user.email "totem-bot@darteaga.com"
+      - run: git config --global user.name "Totem Bot"
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - run: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: *js_deps_cache_key
+
+  test:
+    docker:
+      - image: circleci/node:12
+    environment:
+      NODE_ENV: ci
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - run: npm test
+
+  release:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - git_authoring
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - run: npm run release
+
+  deploy:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - aws-s3/sync:
+          from: templates
+          to: "s3://stable-seeds/circleci/templates"
+          arguments: |
+            --acl public-read
+          overwrite: true
+      - aws-s3/copy:
+          from: seed.yaml
+          to: "s3://stable-seeds/circleci"
+          arguments: |
+            --acl public-read
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - release:
+          <<: *master_only
+          requires:
+            - test
+      - deploy:
+          <<: *master_only
+          requires:
+            - release

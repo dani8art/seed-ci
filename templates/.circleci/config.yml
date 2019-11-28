@@ -1,5 +1,12 @@
 version: 2.1
 
+{{#if deployment.enable}}
+{{#with deployment.s3}}
+orbs:
+  aws-s3: circleci/aws-s3@1.0.11
+{{/with}}
+{{/if}}
+
 references:
   js_deps_cache_key: &js_deps_cache_key v1-dependency-\{{ checksum "package-lock.json" }}
   js_deps_backup_key: &js_deps_backup_key v1-dependency-
@@ -105,11 +112,28 @@ jobs:
       - run: docker tag {{@root.deployment.docker.image}}:$MAIN_TAG {{@root.deployment.docker.image}}:{{this}}
       - run: docker push {{@root.deployment.docker.image}}:{{this}}
       {{/each}}
-    {{else}}
+    {{/if}}
+    {{#if deployment.packageType "===" "npm"}}
       - run:
           name: Authenticate against npm registry.
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
       - run: npm publish
+    {{/if}}
+    {{#if deployment.packageType "===" "s3"}}
+      - aws-s3/sync:
+          from: {{deployment.s3.bucket}}
+          to: "s3://stable-seeds/{{artifact}}/{{deployment.s3.bucket}}"
+          overwrite: true
+          arguments: |
+            --acl public-read
+      {{#each deployment.s3.files}}
+      - aws-s3/copy:
+          from: {{this}}
+          to: "s3://stable-seeds/{{@root.artifact}}"
+          overwrite: true
+          arguments: |
+            --acl public-read
+      {{/each}}
     {{/if}}
 
   {{/if}}
