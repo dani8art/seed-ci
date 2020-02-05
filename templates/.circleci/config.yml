@@ -1,6 +1,6 @@
 version: 2.1
 
-{{#if deployment.enable}}
+{{#if deployment.enabled}}
 {{#with deployment.s3}}
 orbs:
   aws-s3: circleci/aws-s3@1.0.11
@@ -73,7 +73,7 @@ jobs:
       - run: npm test
       {{/with}}
 
-  {{#if release.enable}}
+  {{#if release.enabled}}
   release:
     docker:
       - image: circleci/node:12
@@ -84,10 +84,10 @@ jobs:
           keys:
             - *js_deps_cache_key
             - *js_deps_backup_key
-      - run: npm run release
+      - run: ./.circleci/skip-when-release npm run release
   {{/if}}
 
-  {{#if deployment.enable}}
+  {{#if deployment.enabled}}
   deploy:
     docker:
       - image: circleci/node:12
@@ -100,24 +100,27 @@ jobs:
           keys:
             - *js_deps_cache_key
             - *js_deps_backup_key
-      {{#if release.enable}}
-      - run: echo 'export MAIN_TAG="$(npm run --silent get:version)"' >> $BASH_ENV
-      {{else}}
-      - run: echo 'export MAIN_TAG="$CIRCLE_BRANCH"' >> $BASH_ENV
-      {{/if}}
-      - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-      - run: docker build -t {{deployment.docker.image}}:$MAIN_TAG .
-      - run: docker push {{deployment.docker.image}}:$MAIN_TAG
-      {{#each deployment.docker.additionalTags}}
-      - run: docker tag {{@root.deployment.docker.image}}:$MAIN_TAG {{@root.deployment.docker.image}}:{{this}}
-      - run: docker push {{@root.deployment.docker.image}}:{{this}}
-      {{/each}}
+      - run: |
+          if ./.circleci/skip-when-release exit 0 ; then
+        {{#if release.enabled}}
+            echo 'export MAIN_TAG="$(npm run --silent get:version)"' >> $BASH_ENV
+        {{else}}
+            echo 'export MAIN_TAG="$CIRCLE_BRANCH"' >> $BASH_ENV
+        {{/if}}
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker build -t {{deployment.docker.image}}:$MAIN_TAG .
+            docker push {{deployment.docker.image}}:$MAIN_TAG
+        {{#each deployment.docker.additionalTags}}
+            docker tag {{@root.deployment.docker.image}}:$MAIN_TAG {{@root.deployment.docker.image}}:{{this}}
+            docker push {{@root.deployment.docker.image}}:{{this}}
+        {{/each}}
+          fi
     {{/if}}
     {{#if deployment.packageType "===" "npm"}}
       - run:
           name: Authenticate against npm registry.
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
-      - run: npm publish
+      - run: ./.circleci/skip-when-release npm publish
     {{/if}}
     {{#if deployment.packageType "===" "s3"}}
       - aws-s3/sync:
@@ -146,17 +149,17 @@ workflows:
       - test:
           requires:
             - build
-      {{#if release.enable}}
+      {{#if release.enabled}}
       - release:
           <<: *master_only
           requires:
             - test
       {{/if}}
-      {{#if deployment.enable}}
+      {{#if deployment.enabled}}
       - deploy:
           <<: *master_only
           requires:
-          {{#if release.enable}}
+          {{#if release.enabled}}
             - release
           {{else}}
             - test

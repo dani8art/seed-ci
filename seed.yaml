@@ -4,7 +4,9 @@ templates:
 
 scripts:
   beforePlant: echo "execute before plant circleci seed"
-  afterPlant: npm i --save-dev @commitlint/cli@^8.2.0 @commitlint/config-conventional@^8.2.0 @release-it/conventional-changelog@^1.1.0
+  afterPlant: |
+    npm i --save-dev @commitlint/cli@^8.2.0 @commitlint/config-conventional@^8.2.0 @release-it/conventional-changelog@^1.1.0 && \
+    chmod +x .circleci/skip-when-release
 
 values:
   artifact: circleci
@@ -26,10 +28,10 @@ values:
   #       - bitnami/mongodb:4.2-debian-9
 
   release:
-    enable: false
+    enabled: false
 
   deployment:
-    enable: false
+    enabled: false
     # you could use different types of deployment depend on the package type [npm, docker, s3]
     packageType: docker
     docker: # if you choose docker
