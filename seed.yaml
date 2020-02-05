@@ -1,6 +1,7 @@
 templates:
   - .release-it.json
   - .circleci/config.yml
+  - .circleci/skip-when-release
 
 scripts:
   beforePlant: echo "execute before plant circleci seed"
