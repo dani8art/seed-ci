@@ -129,7 +129,6 @@ jobs:
       - aws-s3/copy:
           from: {{this}}
           to: "s3://stable-seeds/{{@root.artifact}}/{{this}}"
-          overwrite: true
           arguments: |
             --acl public-read
       {{/each}}
