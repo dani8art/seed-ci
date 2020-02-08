@@ -32,7 +32,7 @@ values:
   deployment:
     enabled: false
     # you could use different types of deployment depend on the package type [npm, docker, s3]
-    packageType: docker
+    type: docker
     docker: # if you choose docker
       image: darteaga/pets
       additionalTags:
