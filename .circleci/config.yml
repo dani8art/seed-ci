@@ -1,5 +1,4 @@
 version: 2.1
-
 orbs:
   aws-s3: circleci/aws-s3@1.0.11
 
@@ -59,26 +58,23 @@ jobs:
           keys:
             - *js_deps_cache_key
             - *js_deps_backup_key
-      - run: npm run release
+      - run: ./.circleci/skip-when-release npm run release
 
   deploy:
     docker:
       - image: circleci/node:12
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - *js_deps_cache_key
-            - *js_deps_backup_key
       - aws-s3/sync:
           from: templates
           to: "s3://stable-seeds/circleci/templates"
+          overwrite: true
           arguments: |
             --acl public-read
-          overwrite: true
       - aws-s3/copy:
           from: seed.yaml
           to: "s3://stable-seeds/circleci/seed.yaml"
+          overwrite: true
           arguments: |
             --acl public-read
 
@@ -94,7 +90,11 @@ workflows:
           <<: *master_only
           requires:
             - test
+  delivering:
+    jobs:
       - deploy:
-          <<: *master_only
-          requires:
-            - release
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
