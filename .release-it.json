@@ -1,5 +1,4 @@
 {
-  "non-interactive": true,
   "preReleaseId": "next",
   "git": {
     "commitMessage": "chore: %s",
