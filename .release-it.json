@@ -1,8 +1,8 @@
 {
   "preReleaseId": "next",
   "git": {
-    "commitMessage": "chore: %s",
-    "tagAnnotation": "%s",
+    "commitMessage": "chore: ${version}",
+    "tagAnnotation": "${version}",
     "requireUpstream": false,
     "requireCleanWorkingDir": false
   },
@@ -11,7 +11,7 @@
   },
   "github": {
     "release": true,
-    "releaseName": "%s",
+    "releaseName": "${version}",
     "tokenRef": "GITHUB_TOKEN",
     "draft": false
   },
