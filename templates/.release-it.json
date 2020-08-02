@@ -1,6 +1,5 @@
 {{#if release.enabled}}
 {
-  "non-interactive": true,
   "preReleaseId": "next",
   "git": {
     "commitMessage": "chore: %s",

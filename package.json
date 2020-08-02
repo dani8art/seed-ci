@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo testing",
-    "release": "release-it"
+    "release": "release-it --ci"
   },
   "repository": {
     "type": "git",
