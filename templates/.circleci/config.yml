@@ -146,10 +146,16 @@ jobs:
       {{/each}}
     {{/if}}
     {{#if deployment.type "===" "chart"}}
-      - add_ssh_keys
       - git_authoring
       - run: helm init --client-only
-      - run: ./.circleci/charts-publish
+      - run: |
+          set -x
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+            export GIT_PUSH=true
+          else 
+            export GIT_PUSH=false
+          fi
+          sh ./.circleci/charts-publish
     {{/if}}
 {{/if}}
 
