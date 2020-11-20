@@ -98,9 +98,9 @@ jobs:
   deploy:
     docker:
     {{#if deployment.type "===" "chart"}}
-      - image: circleci/node:12
-    {{else}}
       - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+    {{else}}
+      - image: circleci/node:12
     {{/if}}
     steps:
       - checkout
