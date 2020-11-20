@@ -150,11 +150,6 @@ jobs:
       - run: helm init --client-only
       - run: |
           set -x
-          if [ "$CIRCLE_BRANCH" = "master" ]; then
-            export GIT_PUSH=true
-          else 
-            export GIT_PUSH=false
-          fi
           sh ./.circleci/charts-publish
     {{/if}}
 {{/if}}
