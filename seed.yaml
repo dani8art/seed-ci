@@ -2,10 +2,12 @@ templates:
   - .release-it.json
   - .circleci/config.yml
   - .circleci/skip-when-release
+  - .circleci/charts.config.yml
+  - .circleci/charts-publish
 
 scripts:
   beforePlant: echo "execute before plant circleci seed"
-  afterPlant: npm i --save-dev release-it@^13.6.6 @commitlint/cli@^9.1.2 @commitlint/config-conventional@^9.1.1 @release-it/conventional-changelog@^1.1.4
+  afterPlant: npm i --save-dev release-it@^13.6.6 @commitlint/cli@^9.1.2 @commitlint/config-conventional@^11.0.0 @release-it/conventional-changelog@^1.1.4
 
 values:
   artifact: circleci
@@ -31,16 +33,20 @@ values:
 
   deployment:
     enabled: false
-    # you could use different types of deployment depend on the package type [npm, docker, s3]
+    # you could use different types of deployment depend on the package type [npm, docker, s3, chart]
     type: docker
     docker: # if you choose docker
       image: darteaga/pets
       additionalTags:
         - latest
-#     npm: # if you choose npm
-#       tokenVar: MY_TOKEN # by default it is NPM_TOKEN
-#     s3: # if you choose s3
-#       bucket: dist/1.0.1
-#       files:
-#         - seed.yaml
-
+    # npm: # if you choose npm
+    #   tokenVar: MY_TOKEN # by default it is NPM_TOKEN
+    # s3: # if you choose s3
+    #   bucket: dist/1.0.1
+    #   files:
+    #     - seed.yaml
+    # chart:
+    #   root: .
+    #   additionalRepos:
+    #     - name: bitnami
+    #       url: https://charts.bitnami.com/bitnami
