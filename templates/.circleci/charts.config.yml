@@ -3,7 +3,7 @@
 chart-dirs:
   - {{deployment.chart.root}}
 chart-repos:
-  - {{artifact}}=https://dani8art.github.io/{{artifact}}
+  - {{artifact}}-chart=https://dani8art.github.io/{{artifact}}-chart
   {{#each deployment.chart.additionalRepos}}
   - {{this.name}}={{this.url}}
   {{/each}}
