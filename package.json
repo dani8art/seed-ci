@@ -19,8 +19,9 @@
   "homepage": "https://github.com/dani8art/seed-circleci#readme",
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^9.1.1",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@release-it/bumper": "^1.4.1",
     "@release-it/conventional-changelog": "^1.1.4",
-    "release-it": "^13.6.6"
+    "release-it": "^13.7.1"
   }
 }
