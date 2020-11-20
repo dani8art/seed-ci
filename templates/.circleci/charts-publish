@@ -3,12 +3,6 @@
 #!/bin/bash
 set -eux
 
-if [ "$CIRCLE_BRANCH" = "master" ]; then
-  export GIT_PUSH=true
-else 
-  export GIT_PUSH=false
-fi
-
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GIT_PUSH=${GIT_PUSH:-false}
 
