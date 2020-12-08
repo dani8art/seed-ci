@@ -10,7 +10,16 @@ master_only: &master_only
   filters:
     branches:
       only: master
-
+ignore_gh_pages: &ignore_gh_pages
+  filters:
+    branches:
+      ignore: gh-pages
+release_tags_only: &release_tags_only
+  filters:
+    tags:
+      only: /.*/
+    branches:
+      ignore: /.*/
 commands:
   git_authoring:
     description: Authoring git commit.
@@ -65,6 +74,18 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - run: |
+          MAIN_TAG="$(npm run --silent get:version)"
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+          docker build -t darteaga/seed-circleci:$MAIN_TAG .
+          docker push darteaga/seed-circleci:$MAIN_TAG
+          docker tag darteaga/seed-circleci:$MAIN_TAG darteaga/seed-circleci:latest
+          docker push darteaga/seed-circleci:latest
       - aws-s3/sync:
           from: templates
           to: "s3://stable-seeds/circleci/templates"
@@ -81,8 +102,10 @@ workflows:
   version: 2
   default:
     jobs:
-      - build
+      - build:
+          <<: *ignore_gh_pages
       - test:
+          <<: *ignore_gh_pages
           requires:
             - build
       - release:
@@ -92,8 +115,4 @@ workflows:
   delivering:
     jobs:
       - deploy:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+          <<: *release_tags_only

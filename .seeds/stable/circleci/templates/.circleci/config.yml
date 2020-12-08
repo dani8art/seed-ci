@@ -14,7 +14,16 @@ master_only: &master_only
   filters:
     branches:
       only: master
-
+ignore_gh_pages: &ignore_gh_pages
+  filters:
+    branches:
+      ignore: gh-pages
+release_tags_only: &release_tags_only
+  filters:
+    tags:
+      only: /.*/
+    branches:
+      ignore: /.*/
 commands:
   git_authoring:
     description: Authoring git commit.
@@ -80,7 +89,7 @@ jobs:
       {{/with}}
   {{/if}}
 
-  {{#if release.enabled}}
+{{#if release.enabled}}
   release:
     docker:
       - image: circleci/node:12
@@ -92,9 +101,9 @@ jobs:
             - *js_deps_cache_key
             - *js_deps_backup_key
       - run: ./.circleci/skip-when-release npm run release
-  {{/if}}
+{{/if}}
 
-  {{#if deployment.enabled}}
+{{#if deployment.enabled}}
   deploy:
     docker:
     {{#if deployment.type "===" "chart"}}
@@ -104,26 +113,26 @@ jobs:
     {{/if}}
     steps:
       - checkout
-    {{#if deployment.type "===" "docker"}}
+    {{#with deployment.docker}}
       - setup_remote_docker
       - restore_cache:
           keys:
             - *js_deps_cache_key
             - *js_deps_backup_key
       - run: |
-        {{#if release.enabled}}
+        {{#if @root.release.enabled}}
           MAIN_TAG="$(npm run --silent get:version)"
         {{else}}
           MAIN_TAG="$CIRCLE_BRANCH"
         {{/if}}
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-          docker build -t {{deployment.docker.image}}:$MAIN_TAG .
-          docker push {{deployment.docker.image}}:$MAIN_TAG
-        {{#each deployment.docker.additionalTags}}
+          docker build -t {{this.image}}:$MAIN_TAG .
+          docker push {{this.image}}:$MAIN_TAG
+        {{#each this.additionalTags}}
           docker tag {{@root.deployment.docker.image}}:$MAIN_TAG {{@root.deployment.docker.image}}:{{this}}
           docker push {{@root.deployment.docker.image}}:{{this}}
         {{/each}}
-    {{/if}}
+    {{/with}}
     {{#if deployment.type "===" "npm"}}
       - run:
           name: Authenticate against npm registry.
@@ -150,21 +159,35 @@ jobs:
       - run: helm init --client-only
       - run: |
           set -x
-          if [ "$CIRCLE_BRANCH" = "master" ]; then
-            export GIT_PUSH=true
-          else 
-            export GIT_PUSH=false
-          fi
           sh ./.circleci/charts-publish
     {{/if}}
+  {{#if deployment.type "===" "docker"}}
+  {{#with deployment.docker.chart}}
+  chart:
+    docker:
+      - image: docker.io/darteaga/seed-circleci
+    steps:
+      - checkout
+      - git_authoring
+      - restore_cache:
+          keys:
+            - *js_deps_cache_key
+            - *js_deps_backup_key
+      - run: |
+          version="$(npm run --silent get:version)"
+          ./.circleci/charts-upgrade-app "${version}"
+  {{/with}}
+  {{/if}}
 {{/if}}
 
 workflows:
   version: 2
   default:
     jobs:
-      - build
+      - build:
+          <<: *ignore_gh_pages
       - test:
+          <<: *ignore_gh_pages
           requires:
             - build
       {{#if release.enabled}}
@@ -177,9 +200,11 @@ workflows:
   delivering:
     jobs:
       - deploy:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+          <<: *release_tags_only
+  {{#if deployment.type "===" "docker"}}
+  {{#with deployment.docker.chart}}
+      - chart:
+          <<: *release_tags_only
+  {{/with}}
+  {{/if}}  
 {{/if}}

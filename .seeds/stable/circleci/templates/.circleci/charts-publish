@@ -1,13 +1,13 @@
 {{#if deployment.enabled}}
 {{#if deployment.type "===" "chart"}}
 #!/bin/bash
-set -eux
 
-if [ "$CIRCLE_BRANCH" = "master" ]; then
-  export GIT_PUSH=true
-else 
-  export GIT_PUSH=false
-fi
+# shellcheck disable=SC1091
+
+set -o errexit
+set -o nounset
+set -o pipefail
+#set -o xtrace
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GIT_PUSH=${GIT_PUSH:-false}
@@ -40,9 +40,7 @@ cd $SRCROOT/output && helm repo index .
 
 cd $SRCROOT/output && git status
 
-if [ "$GIT_PUSH" == "true" ]
-then
-    cd $SRCROOT/output && git add . && git commit -m "Publish charts" && git push git@github.com:dani8art/{{artifact}}-chart.git gh-pages
-fi
+cd $SRCROOT/output && git add . && git commit -m "chore(ci): publish charts" && git push git@github.com:dani8art/{{artifact}}-chart.git gh-pages
+
 {{/if}}
 {{/if}}

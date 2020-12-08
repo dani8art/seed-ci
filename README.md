@@ -9,5 +9,5 @@ export DEPLOYMENT_DOCKER=deployment.docker.image=darteaga/seed-circleci,deployme
 
 seeder plant -f \
   --set $COMMON_FIELDS,$DEPLOYMENT_S3,$DEPLOYMENT_DOCKER circleci && \
-  chmod +x .circleci/skip-when-release .circleci/charts-upgrade-app
+  chmod +x .circleci/skip-when-release
 ```
