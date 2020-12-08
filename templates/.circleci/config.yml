@@ -175,7 +175,7 @@ jobs:
             - *js_deps_backup_key
       - run: |
           version="$(npm run --silent get:version)"
-          ./.circleci/chart-upgrade-app "${version}"
+          ./.circleci/charts-upgrade-app "${version}"
   {{/with}}
   {{/if}}
 {{/if}}
