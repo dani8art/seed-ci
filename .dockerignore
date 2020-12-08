@@ -1,0 +1,12 @@
+.circleci
+.seeds
+node_modules
+templates
+.dockerignore
+.gitignore
+.release-it.json
+LICENSE
+package-lock.json
+package.json
+README.md
+seed.yaml

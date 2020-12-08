@@ -4,6 +4,7 @@ templates:
   - .circleci/skip-when-release
   - .circleci/charts.config.yml
   - .circleci/charts-publish
+  - .circleci/charts-upgrade-app
 
 scripts:
   beforePlant: echo "execute before plant circleci seed"
@@ -35,10 +36,17 @@ values:
     enabled: false
     # you could use different types of deployment depend on the package type [npm, docker, s3, chart]
     type: docker
-    docker: # if you choose docker
-      image: darteaga/pets
-      additionalTags:
-        - latest
+    # docker: # if you choose docker
+    #   image: darteaga/pets
+    #   additionalTags:
+    #     - latest
+    #   chart:
+    #     repo: git@github.com:dani8art/netsalary-chart.git
+    #     files:
+    #       - path: charts/netsalary/Chart.yaml
+    #         value: appVersion
+    #       - path: charts/netsalary/values.yaml
+    #         value: image.tag
     # npm: # if you choose npm
     #   tokenVar: MY_TOKEN # by default it is NPM_TOKEN
     # s3: # if you choose s3

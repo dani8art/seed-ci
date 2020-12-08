@@ -1,7 +1,13 @@
 {{#if deployment.enabled}}
 {{#if deployment.type "===" "chart"}}
 #!/bin/bash
-set -eux
+
+# shellcheck disable=SC1091
+
+set -o errexit
+set -o nounset
+set -o pipefail
+#set -o xtrace
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GIT_PUSH=${GIT_PUSH:-false}
