@@ -205,6 +205,8 @@ workflows:
   {{#with deployment.docker.chart}}
       - chart:
           <<: *release_tags_only
+          requires:
+            - deploy
   {{/with}}
   {{/if}}  
 {{/if}}
