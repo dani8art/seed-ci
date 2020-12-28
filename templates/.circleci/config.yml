@@ -58,7 +58,7 @@ jobs:
   test:
   {{#if deployment.type "===" "chart"}}
     docker:
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.4.1
     steps:
       - checkout
       - run: ct lint --config .circleci/charts.config.yml
@@ -107,7 +107,7 @@ jobs:
   deploy:
     docker:
     {{#if deployment.type "===" "chart"}}
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.4.1
     {{else}}
       - image: circleci/node:12
     {{/if}}
