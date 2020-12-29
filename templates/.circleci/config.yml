@@ -156,6 +156,7 @@ jobs:
     {{/if}}
     {{#if deployment.type "===" "chart"}}
       - git_authoring
+      - run: helm init --client-only
       - run: |
           set -x
           sh ./.circleci/charts-publish
