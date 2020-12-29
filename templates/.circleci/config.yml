@@ -156,7 +156,7 @@ jobs:
     {{/if}}
     {{#if deployment.type "===" "chart"}}
       - git_authoring
-      - run: helm init --client-only
+      - run: helm init --stable-repo-url https://charts.bitnami.com/bitnami --client-only
       - run: |
           set -x
           sh ./.circleci/charts-publish
