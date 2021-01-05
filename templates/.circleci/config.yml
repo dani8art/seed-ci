@@ -58,7 +58,7 @@ jobs:
   test:
   {{#if deployment.type "===" "chart"}}
     docker:
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.4.1
+      - image: docker.io/darteaga/seed-circleci
     steps:
       - checkout
       - run: ct lint --config .circleci/charts.config.yml
@@ -107,7 +107,7 @@ jobs:
   deploy:
     docker:
     {{#if deployment.type "===" "chart"}}
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.4.1
+      - image: docker.io/darteaga/seed-circleci
     {{else}}
       - image: circleci/node:12
     {{/if}}
@@ -156,7 +156,6 @@ jobs:
     {{/if}}
     {{#if deployment.type "===" "chart"}}
       - git_authoring
-      - run: helm init --stable-repo-url https://charts.bitnami.com/bitnami --client-only
       - run: |
           set -x
           sh ./.circleci/charts-publish
