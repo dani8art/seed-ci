@@ -156,9 +156,7 @@ jobs:
     {{/if}}
     {{#if deployment.type "===" "chart"}}
       - git_authoring
-      - run: |
-          set -x
-          sh ./.circleci/charts-publish
+      - run: ./.circleci/charts-publish
     {{/if}}
   {{#if deployment.type "===" "docker"}}
   {{#with deployment.docker.chart}}
