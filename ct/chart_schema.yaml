@@ -1,14 +1,13 @@
 name: str()
-home: str()
-type: str()
+home: str(required=False)
 version: str()
-appVersion: any(str(), num())
-apiVersion: any(str(), num())
+apiVersion: str()
+appVersion: any(str(), num(), required=False)
 description: str()
-dependencies: list(include('dependency'), required=False)
 keywords: list(str(), required=False)
 sources: list(str(), required=False)
 maintainers: list(include('maintainer'), required=False)
+dependencies: list(include('dependency'), required=False)
 icon: str(required=False)
 engine: str(required=False)
 condition: str(required=False)
@@ -16,6 +15,7 @@ tags: str(required=False)
 deprecated: bool(required=False)
 kubeVersion: str(required=False)
 annotations: map(str(), str(), required=False)
+type: str(required=False)
 ---
 maintainer:
   name: str()
@@ -24,7 +24,14 @@ maintainer:
 ---
 dependency:
   name: str()
-  repository: str()
-  tags: list(str(), required=False)
   version: str()
+  repository: str()
   condition: str(required=False)
+  tags: list(str(), required=False)
+  enabled: bool(required=False)
+  import-values: any(list(str()), list(include('import-value')), required=False)
+  alias: str(required=False)
+---
+import-value:
+  child: str()
+  parent: str()
