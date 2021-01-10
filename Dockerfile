@@ -4,13 +4,14 @@ ARG JQ_VERSION=1.6
 ARG YQ_VERSION=3.4.0
 ARG CT_VERSION=3.3.1
 ARG HELM_VERSION=3.4.2
+ARG PYTHON_VERSION=3.9.1-2
 
 USER root
 
-RUN install_packages acl ca-certificates curl gzip libc6 libcom-err2 libcurl4 libffi6 libgcrypt20 libgmp10 \
+RUN install_packages acl ca-certificates curl wget gzip libc6 libcom-err2 libcurl4 libffi6 libgcrypt20 libgmp10 \
   libgnutls30 libgpg-error0 libgssapi-krb5-2 libhogweed4 libidn2-0 libk5crypto3 libkeyutils1 libkrb5-3 \
   libkrb5support0 libldap-2.4-2 libnettle6 libnghttp2-14 libp11-kit0 libpsl5 librtmp1 libsasl2-2 libssh2-1 \
-  libssl1.1 libtasn1-6 libunistring2 procps ssh sudo tar zlib1g git
+  libssl1.1 libtasn1-6 libunistring2 procps ssh sudo tar zlib1g git yamllint
 
 RUN curl -Lso /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64" && \
   chmod +x /usr/local/bin/jq
@@ -23,6 +24,16 @@ RUN mkdir -p /tmp/ct-files/ && \
   tar -xzf "/tmp/ct-files/${CT_TAR_FILENAME}" -C /tmp/ct-files/ && \
   cp /tmp/ct-files/ct /usr/local/bin && \
   rm -rf /tmp/ct-files
+COPY ct /etc/ct
+
+RUN wget -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz && \
+  echo "674270001df6e196f2f551a01d2c7ff1bf0219f8627bd80d29f2100d522964ad  /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz" | sha256sum -c - && \
+  tar -zxf /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz -P --transform 's|^[^/]*/files|/opt/bitnami|' --wildcards '*/files' && \
+  rm -rf /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz
+
+ENV PATH="/opt/bitnami/python/bin:$PATH"
+
+RUN pip install yamale
 
 ARG HELM_TAR_FILENAME="helm-v${HELM_VERSION}-linux-amd64.tar.gz"
 RUN mkdir -p /tmp/helm-files/ && \
