@@ -21,9 +21,9 @@ update_file() {
     local -r value=${2:?value is missing}
     local -r file_type=${file##*\.}
 
-    if [[ "${file_type}" === "yaml" ]] || [[ "${file_type}" === "yml" ]]; then
+    if [[ "${file_type}" = "yaml" ]] || [[ "${file_type}" = "yml" ]]; then
         yq w -i "${file}" "${value}" "${tag}"
-    elif [[ "${file_type}" === "json" ]]; then
+    elif [[ "${file_type}" = "json" ]]; then
         file_content=$(jq  ".${value}=${tag}" "${file}")
         echo "${file_content}" > "${file}"
     fi
