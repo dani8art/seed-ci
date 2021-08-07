@@ -89,7 +89,6 @@ jobs:
       - aws-s3/sync:
           from: templates
           to: "s3://stable-seeds/circleci/templates"
-          overwrite: true
           arguments: |
             --acl public-read
       - aws-s3/copy:
