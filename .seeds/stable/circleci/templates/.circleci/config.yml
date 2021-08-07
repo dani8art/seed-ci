@@ -2,7 +2,7 @@ version: 2.1
 {{#if deployment.enabled}}
 {{#with deployment.s3}}
 orbs:
-  aws-s3: circleci/aws-s3@1.0.11
+  aws-s3: circleci/aws-s3@3.0
 {{/with}}
 {{/if}}
 
@@ -35,7 +35,7 @@ commands:
 jobs:
   build:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - restore_cache:
@@ -58,13 +58,13 @@ jobs:
   test:
   {{#if deployment.type "===" "chart"}}
     docker:
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: docker.io/darteaga/seed-circleci
     steps:
       - checkout
       - run: ct lint --config .circleci/charts.config.yml
   {{else}}
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     {{#with test}}
     {{#each dependencies}}
       - image: {{this}}
@@ -92,7 +92,7 @@ jobs:
 {{#if release.enabled}}
   release:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - git_authoring
@@ -107,9 +107,9 @@ jobs:
   deploy:
     docker:
     {{#if deployment.type "===" "chart"}}
-      - image: gcr.io/kubernetes-charts-ci/test-image:v3.1.0
+      - image: docker.io/darteaga/seed-circleci
     {{else}}
-      - image: circleci/node:12
+      - image: circleci/node:14
     {{/if}}
     steps:
       - checkout
@@ -143,7 +143,6 @@ jobs:
       - aws-s3/sync:
           from: {{deployment.s3.bucket}}
           to: "s3://stable-seeds/{{artifact}}/{{deployment.s3.bucket}}"
-          overwrite: true
           arguments: |
             --acl public-read
       {{#each deployment.s3.files}}
@@ -156,10 +155,7 @@ jobs:
     {{/if}}
     {{#if deployment.type "===" "chart"}}
       - git_authoring
-      - run: helm init --client-only
-      - run: |
-          set -x
-          sh ./.circleci/charts-publish
+      - run: ./.circleci/charts-publish
     {{/if}}
   {{#if deployment.type "===" "docker"}}
   {{#with deployment.docker.chart}}
@@ -174,7 +170,7 @@ jobs:
             - *js_deps_cache_key
             - *js_deps_backup_key
       - run: |
-          version="$(npm run --silent get:version)"
+          version="$(jq -r ".version" package.json)"
           ./.circleci/charts-upgrade-app "${version}"
   {{/with}}
   {{/if}}
@@ -205,6 +201,8 @@ workflows:
   {{#with deployment.docker.chart}}
       - chart:
           <<: *release_tags_only
+          requires:
+            - deploy
   {{/with}}
   {{/if}}  
 {{/if}}
