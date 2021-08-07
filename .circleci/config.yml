@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  aws-s3: circleci/aws-s3@1.0.11
+  aws-s3: circleci/aws-s3@3.0
 
 references:
   js_deps_cache_key: &js_deps_cache_key v1-dependency-{{ checksum "package-lock.json" }}
@@ -31,7 +31,7 @@ commands:
 jobs:
   build:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - restore_cache:
@@ -46,7 +46,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     environment:
       NODE_ENV: ci
     steps:
@@ -59,7 +59,7 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - git_authoring
@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - setup_remote_docker
