@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo testing",
     "release": "release-it --ci",
+    "release:dry-run": "release-it --ci --dry-run",
     "get:version": "echo ${npm_package_version}"
   },
   "repository": {
