@@ -1,10 +1,10 @@
 FROM docker.io/bitnami/minideb:buster
 
 ARG JQ_VERSION=1.6
-ARG YQ_VERSION=3.4.0
-ARG CT_VERSION=3.3.1
-ARG HELM_VERSION=3.4.2
-ARG PYTHON_VERSION=3.9.1-2
+ARG YQ_VERSION=3.4.1
+ARG CT_VERSION=3.7.1
+ARG HELM_VERSION=3.10.2
+ARG PYTHON_VERSION=3.10.8-2
 
 USER root
 
@@ -27,7 +27,6 @@ RUN mkdir -p /tmp/ct-files/ && \
 COPY ct /etc/ct
 
 RUN wget -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz && \
-  echo "674270001df6e196f2f551a01d2c7ff1bf0219f8627bd80d29f2100d522964ad  /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz" | sha256sum -c - && \
   tar -zxf /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz -P --transform 's|^[^/]*/files|/opt/bitnami|' --wildcards '*/files' && \
   rm -rf /tmp/bitnami/pkg/cache/python-${PYTHON_VERSION}-linux-amd64-debian-10.tar.gz
 
