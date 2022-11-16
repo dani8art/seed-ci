@@ -19,7 +19,7 @@
     "url": "https://github.com/dani8art/seed-circleci/issues"
   },
   "homepage": "https://github.com/dani8art/seed-circleci#readme",
-  "dependencies": {
+  "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "@release-it/bumper": "^4.0.0",

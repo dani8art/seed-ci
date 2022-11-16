@@ -20,7 +20,8 @@
       "preset": "angular"
     },
     "@release-it/bumper": {
-      "out": []
+      "out": [
+      ]
     }
   }
 }
