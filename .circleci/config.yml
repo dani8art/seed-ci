@@ -31,7 +31,7 @@ commands:
 jobs:
   build:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.12
     steps:
       - checkout
       - restore_cache:
@@ -46,7 +46,7 @@ jobs:
 
   test:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.12
     environment:
       NODE_ENV: ci
     steps:
@@ -59,7 +59,7 @@ jobs:
 
   release:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.12
     steps:
       - checkout
       - git_authoring
@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.12
     steps:
       - checkout
       - setup_remote_docker
