@@ -14,7 +14,6 @@ GIT_PUSH=${GIT_PUSH:-false}
 
 rm -rf $SRCROOT/output && git clone -b gh-pages git@github.com:dani8art/{{artifact}}-chart.git $SRCROOT/output
 
-helm repo add {{artifact}}-chart https://dani8art.github.io/{{artifact}}-chart
 {{#each deployment.chart.additionalRepos}}
 helm repo add {{this.name}} {{this.url}}
 {{/each}}
