@@ -13,7 +13,7 @@ set -o pipefail
 tag="${1:?tag is required}"
 src_root="$(cd "$(dirname "$0")/.." && pwd)"
 
-rm -rf "${src_root}/chart_src" && git clone -b master "{{repo}}" "${src_root}/chart_src"
+rm -rf "${src_root}/chart_src" && git clone -b "{{main_branch}}" "{{repo}}" "${src_root}/chart_src"
 cd "${src_root}/chart_src"
 
 update_file() {

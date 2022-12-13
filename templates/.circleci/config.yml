@@ -10,10 +10,10 @@ references:
   js_deps_cache_key: &js_deps_cache_key v1-dependency-\{{ checksum "package-lock.json" }}
   js_deps_backup_key: &js_deps_backup_key v1-dependency-
 
-master_only: &master_only
+main_branch_only: &main_branch_only
   filters:
     branches:
-      only: master
+      only: {{git.main_branch}}
 ignore_gh_pages: &ignore_gh_pages
   filters:
     branches:
@@ -188,7 +188,7 @@ workflows:
             - build
       {{#if release.enabled}}
       - release:
-          <<: *master_only
+          <<: *main_branch_only
           requires:
             - test
       {{/if}}

@@ -13,8 +13,10 @@ scripts:
 values:
   artifact: circleci
   git:
-    name: Totem Bot
     email: totem-bot@darteaga.com
+    # It is set to master to keep retrocompatibility. It is recommended to override this value with other names like 'main'.
+    main_branch: master
+    name: Totem Bot
 
   cache:
     - node_modules
@@ -42,6 +44,7 @@ values:
     #     - latest
     #   chart:
     #     repo: git@github.com:dani8art/netsalary-chart.git
+    #     main_branch: master # It is set to master to keep retrocompatibility. It is recommended to override this value with other names like 'main'.
     #     files:
     #       - path: charts/netsalary/Chart.yaml
     #         value: appVersion
