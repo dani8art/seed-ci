@@ -21,6 +21,9 @@ values:
   cache:
     - node_modules
 
+  workspace:
+    - dist
+
   # By default the buil job executes `npm ci` if build.cmd is configured then it is also executed.
   #   build:
   #     cmd: npm build
@@ -51,6 +54,7 @@ values:
     #       - path: charts/netsalary/values.yaml
     #         value: image.tag
     # npm: # if you choose npm
+    #   root: ./dist/root # by default it is .
     #   tokenVar: MY_TOKEN # by default it is NPM_TOKEN
     # s3: # if you choose s3
     #   bucket: dist/1.0.1

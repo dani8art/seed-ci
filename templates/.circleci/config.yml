@@ -48,6 +48,12 @@ jobs:
       - run: {{cmd}}
       {{/if}}
       {{/with}}
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            {{#each workspace}}
+            - {{this}}
+            {{/each}}
       - save_cache:
           paths:
             {{#each cache}}
@@ -134,10 +140,12 @@ jobs:
         {{/each}}
     {{/with}}
     {{#if deployment.type "===" "npm"}}
+      - attach_workspace:
+          at: dist
       - run:
           name: Authenticate against npm registry.
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
-      - run: npm publish
+      - run: npm publish {{deployment.npm.root}}
     {{/if}}
     {{#if deployment.type "===" "s3"}}
       - aws-s3/sync:
