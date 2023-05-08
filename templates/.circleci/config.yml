@@ -106,7 +106,15 @@ jobs:
           keys:
             - *js_deps_cache_key
             - *js_deps_backup_key
+      - attach_workspace:
+          at: dist
       - run: ./.circleci/skip-when-release npm run release
+      - persist_to_workspace:
+          root: .
+          paths:
+            {{#each workspace}}
+            - {{this}}
+            {{/each}}
 {{/if}}
 
 {{#if deployment.enabled}}

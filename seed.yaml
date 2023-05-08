@@ -36,6 +36,10 @@ values:
 
   release:
     enabled: false
+    bumps:
+      - package.json
+    #  - dist/ngx-oas-gen/package.json
+    #  - projects/ngx-oas-gen/package.json
 
   deployment:
     enabled: false
