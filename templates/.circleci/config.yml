@@ -49,7 +49,6 @@ jobs:
       {{/if}}
       {{/with}}
       - persist_to_workspace:
-          root: workspace
           paths:
             {{#each workspace}}
             - {{this}}
