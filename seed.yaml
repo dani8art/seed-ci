@@ -22,7 +22,7 @@ values:
     - node_modules
 
   workspace:
-    - dist
+    - dist/*
 
   # By default the buil job executes `npm ci` if build.cmd is configured then it is also executed.
   #   build:
@@ -43,6 +43,7 @@ values:
 
   deployment:
     enabled: false
+    build: false
     # you could use different types of deployment depend on the package type [npm, docker, s3, chart]
     type: docker
     # docker: # if you choose docker

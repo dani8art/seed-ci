@@ -107,7 +107,7 @@ jobs:
             - *js_deps_cache_key
             - *js_deps_backup_key
       - attach_workspace:
-          at: dist
+          at: .
       - run: ./.circleci/skip-when-release npm run release
       - persist_to_workspace:
           root: .
@@ -149,7 +149,7 @@ jobs:
     {{/with}}
     {{#if deployment.type "===" "npm"}}
       - attach_workspace:
-          at: dist
+          at: .
       - run:
           name: Authenticate against npm registry.
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ./.npmrc
@@ -211,8 +211,16 @@ workflows:
 {{#if deployment.enabled}}
   delivering:
     jobs:
+    {{#if deployment.build}}
+      - build:
+          <<: *release_tags_only
+    {{/if}}
       - deploy:
           <<: *release_tags_only
+          {{#if deployment.build}}
+          requires:
+            - build
+          {{/if}}
   {{#if deployment.type "===" "docker"}}
   {{#with deployment.docker.chart}}
       - chart:
