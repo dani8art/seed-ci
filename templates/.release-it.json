@@ -24,6 +24,7 @@
       "out": [
         {{#each release.bumps}}
         "{{this}}"
+        {{#unless @last}},{{/unless}}
         {{/each}}
         {{#if deployment.type "===" "chart"}}
         "charts/{{artifact}}/Chart.yaml"
